@@ -6,10 +6,43 @@
   <title>Document</title>
 </head>
 <body>
+  <form id="paymentForm">
+    <label for="cardContainer">Credit / Debit Card</label>
+
+    <div id="cardContainer">
+      <!-- PaymentCard iFrame content will go here. -->
+    </div>
+
+    <button>Submit Payment Form</button>
+  </form>
 
   <script src="../tratta-fields.js"></script>
   <script>
-    var fields = new TrattaFields();
+    var fields = new TrattaFields({
+      api_key: '<public_api_key>',
+
+      el: 'cardContainer',
+
+      style: {
+        valid: {
+          color: 'black'
+        }
+      }
+    });
+
+    fields.on('blur', function (event) {
+      // Handle errors
+      console.log(event);
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      // Create Token
+      fields.createToken().then(function (result) {
+        console.log(result)
+      });
+    });
   </script>
 </body>
 </html>
