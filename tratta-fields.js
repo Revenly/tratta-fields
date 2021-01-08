@@ -74,10 +74,39 @@
   errors = {
     INVALID_CARD_LENGTH: 'INVALID_CARD_LENGTH',
     INVALID_CARD_NUMBER: 'INVALID_CARD_NUMBER',
+    INVALID_CARD_INFORMATION: 'INVALID_CARD_INFORMATION',
     CARD_NUMBER_IS_REQUIRED: 'CARD_NUMBER_IS_REQUIRED',
     EXPIRATION_DATE_IS_REQUIRED: 'EXPIRATION_DATE_IS_REQUIRED',
     CARD_IS_EXPIRED: 'CARD_IS_EXPIRED',
     CVV_IS_REQUIRED: 'CVV_IS_REQUIRED'
+  },
+
+  formatError = function (errorMessage) {
+    if (errorMessage.length === 0) {
+      return {
+        error: false
+      }
+    }
+
+    var formatMap = {
+      'invalid length': errors.INVALID_CARD_LENGTH,
+      'card number is required': errors.CARD_NUMBER_IS_REQUIRED,
+      'invalid card number': errors.INVALID_CARD_NUMBER,
+      'Invalid card informtion': errors.INVALID_CARD_INFORMATION,
+      'expiration date is required': errors.EXPIRATION_DATE_IS_REQUIRED,
+      'card is expired': errors.CARD_IS_EXPIRED,
+      'cvv is required': errors.CVV_IS_REQUIRED
+    };
+
+    var errorType = Object.prototype.hasOwnProperty.call(formatMap, errorMessage)
+      ? formatMap[errorMessage]
+      : errorMessage;
+
+    return {
+      error: {
+        type: errorType
+      }
+    }
   },
 
   /**
@@ -102,34 +131,7 @@
       self.paymentCard.addHTML(options.el);
 
       self.paymentCard.addEventListener('error', function (errorMessage) {
-        var formatError = function (errorMessage) {
-          var formatMap = {
-            'invalid length': errors.INVALID_CARD_LENGTH,
-            'card number is required': errors.CARD_NUMBER_IS_REQUIRED,
-            'invalid card number': errors.INVALID_CARD_NUMBER,
-            'expiration date is required': errors.EXPIRATION_DATE_IS_REQUIRED,
-            'card is expired': errors.CARD_IS_EXPIRED,
-            'cvv is required': errors.CVV_IS_REQUIRED
-          };
-
-          var message = Object.prototype.hasOwnProperty.call(formatMap, errorMessage)
-            ? formatMap[errorMessage]
-            : errorMessage;
-
-          if (message.length > 0) {
-            return {
-              error: {
-                message: message
-              }
-            }
-          }
-
-          return {
-            error: false
-          }
-        };
-
-        self.errorCallback(formatError(errorMessage));
+        self.blurCallback(formatError(errorMessage));
       });
     };
 
@@ -140,7 +142,7 @@
    * public Tratta Fields API
    */
   TrattaFields.prototype = {
-    errorCallback: function () {},
+    blurCallback: function () {},
 
     client: null,
 
@@ -156,12 +158,23 @@
 
     on: function (eventType, callback) {
       if (eventType === 'blur') {
-        this.errorCallback = callback;
+        this.blurCallback = callback;
       }
     },
 
     createToken: function () {
-      return this.client.getPaymentKey(this.paymentCard)
+      return this.client
+        .getPaymentKey(this.paymentCard)
+        .then(function (result) {
+          if (result.error) {
+            //
+          } else {
+            return result;
+          }
+        })
+        .catch(function (result) {
+          return formatError(result).error.type;
+        });
     },
   };
 

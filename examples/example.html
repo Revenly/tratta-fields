@@ -31,17 +31,23 @@
     });
 
     fields.on('blur', function (event) {
-      // Handle errors
-      console.log(event);
+      if (event.error) {
+        // Handle errors
+        console.log(event);
+      }
     });
 
     document.getElementById('paymentForm').addEventListener('submit', function (event) {
       event.preventDefault();
 
       // Create Token
-      fields.createToken().then(function (result) {
-        console.log(result)
-      });
+      fields.createToken()
+        .then(function (token) {
+          console.log(token);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     });
   </script>
 </body>
