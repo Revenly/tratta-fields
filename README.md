@@ -12,7 +12,7 @@ Include `tratta-fields.js` on the page where you'd like to collect payment infor
 
 *To be added - NPM and CDN support.*
 
-Next, create an instance of the `TrattaFields` object using **Public API Key** created using the [Public API Key Endpoint](https://help.usaepay.info/developer/rest-api/more/public-api-key/). You can also create this key manually in the [merchant account](https://help.usaepay.info/merchant/guide/settings/api-keys/#public-key). Make sure to also provide **id of element** where Tratta Fields will be rendered.
+Next, create an instance of the `TrattaFields` object using **Public API Key** created using the [Public API Key Endpoint](https://help.usaepay.info/developer/rest-api/more/public-api-key/). For those using USAePay Console 2, you can also create this key manually in the [payment gateway admin interface](https://help.usaepay.info/merchant/guide/settings/api-keys/#public-key). Make sure to also provide **id of element** where Tratta Fields will be rendered.
 
 ```js
 var fields = new TrattaFields({
