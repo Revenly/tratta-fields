@@ -34,6 +34,27 @@
     return (/Array/).test(Object.prototype.toString.call(obj));
   },
 
+  addIdStyles = function(style) {
+    var fieldIds = ['container', 'cnum', 'exp', 'cvv'];
+    var idStyles = "";
+
+    Object.keys(style).forEach(function (classNameOrId) {
+      if (fieldIds.indexOf(classNameOrId) !== -1) {
+        var cssStyle = "";
+        Object.keys(style[classNameOrId]).forEach(function (styleName) {
+          cssStyle += styleName + ":" + style[classNameOrId][styleName] + " !important;";
+        });
+        idStyles += '#payjs-' + classNameOrId + " {" + cssStyle + "}"
+      }
+    });
+
+    style['nonExistentRandomClass'] = {
+      display: 'block; } ' + idStyles.substr(0, idStyles.length - 2)
+    };
+
+    return style;
+  },
+
   extend = function (to, from, overwrite) {
       var prop, hasProp;
       for (prop in from) {
@@ -69,6 +90,8 @@
     el: null,
 
     style: {},
+
+    cvv_required: true,
   },
 
   errors = {
@@ -127,7 +150,7 @@
       self.client = new usaepay.Client(options.api_key);
       self.paymentCard = self.client.createPaymentCardEntry();
 
-      self.paymentCard.generateHTML(options.style);
+      self.paymentCard.generateHTML(options.style, { cvv_required: options.cvv_required });
       self.paymentCard.addHTML(options.el);
 
       self.paymentCard.addEventListener('error', function (errorMessage) {
@@ -152,8 +175,10 @@
      * configure functionality
      */
     config: function (options) {
-      // extend object
-      return extend(defaults, options, true)
+      options = extend(defaults, options, true);
+      options.style = addIdStyles(options.style);
+
+      return options;
     },
 
     on: function (eventType, callback) {

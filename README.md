@@ -53,10 +53,58 @@ fields.on('blur', function (event) {
 ### Error types
 
 Here is the list of Error Types you can expect to find in `catch` method or `blur` events.
- - 'INVALID_CARD_LENGTH'
- - 'INVALID_CARD_NUMBER'
- - 'INVALID_CARD_INFORMATION'
- - 'CARD_NUMBER_IS_REQUIRED'
- - 'EXPIRATION_DATE_IS_REQUIRED'
- - 'CARD_IS_EXPIRED'
- - 'CVV_IS_REQUIRED'
+ - INVALID_CARD_LENGTH
+ - INVALID_CARD_NUMBER
+ - INVALID_CARD_INFORMATION
+ - CARD_NUMBER_IS_REQUIRED
+ - EXPIRATION_DATE_IS_REQUIRED
+ - CARD_IS_EXPIRED
+ - CVV_IS_REQUIRED
+
+## Styling Fields
+
+You can customize how payment fields look like by passing in a style object. You can style any of these classes or ids present in the fields:
+ - #payjs-container
+ - #payjs-cnum
+ - #payjs-exp
+ - #payjs-cvv
+ - .payjs-base
+ - .payjs-invalid (added to any of the input fields, when validation fails)
+ - .payjs-valid (added to any of the input fields, when validation succeeds)
+
+You only need to specify the suffix of class or id. So for example when you'd like to add 1px solid black border around the whole payment field and set successful validation state of fields to bold black font, you could do it like this:
+
+```js
+var fields = new TrattaFields({
+  api_key: '<public_api_key>', # required
+  el: 'cardContainer' # required
+
+  style: {
+    container: {
+      border: '1px solid black'
+    },
+
+    valid: {
+      color: 'black',
+      fontWeight: 'bold'
+    }
+  }
+});
+```
+
+## Card Security Code (CVV)
+
+By default card security code is required. If you'd like to disable it's validation, you can do it with cvv_required parameter:
+
+```js
+var fields = new TrattaFields({
+  api_key: '<public_api_key>', # required
+  el: 'cardContainer' # required
+
+  cvv_required: false,
+});
+```
+
+## Example Code
+
+You can find the example code [here](https://github.com/Revenly/tratta-fields/blob/main/examples/example.html).
