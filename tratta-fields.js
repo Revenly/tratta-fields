@@ -43,7 +43,7 @@
       if (fieldIds.indexOf(classNameOrId) !== -1) {
         var cssStyle = "";
         Object.keys(style[classNameOrId]).forEach(function (styleName) {
-          cssStyle += styleName + ":" + style[classNameOrId][styleName] + " !important;";
+          cssStyle += camelToDash(styleName) + ":" + style[classNameOrId][styleName] + " !important;";
         });
         idStyles += '#payjs-' + classNameOrId + " {" + cssStyle + "}"
       }
@@ -54,6 +54,12 @@
     };
 
     return style;
+  },
+
+  camelToDash = function(str) {
+    return str.replace(/([A-Z])/g, function($1) {
+        return "-" + $1.toLowerCase();
+    });
   },
 
   extend = function (to, from, overwrite) {
