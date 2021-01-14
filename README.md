@@ -12,13 +12,14 @@ Include `tratta-fields.js` on the page where you'd like to collect payment infor
 
 *To be added - NPM and CDN support.*
 
-Next, create an instance of the `TrattaFields` object using **Public API Key** created using the [Public API Key Endpoint](https://help.usaepay.info/developer/rest-api/more/public-api-key/). For those using USAePay Console 2, you can also create this key manually in the [payment gateway admin interface](https://help.usaepay.info/merchant/guide/settings/api-keys/#public-key). Make sure to also provide **id of element** where Tratta Fields will be rendered.
+Next, create an instance of the `TrattaFields` object using **Public API Key** created using the [Public API Key Endpoint](https://help.usaepay.info/developer/rest-api/more/public-api-key/). For those using USAePay Console 2, you can also create this key manually in the [payment gateway admin interface](https://help.usaepay.info/merchant/guide/settings/api-keys/#public-key). Make sure to also call `mount` method with **id of element** where Tratta Fields will be rendered.
 
 ```js
 var fields = new TrattaFields({
   api_key: '<public_api_key>', # required
-  el: 'cardContainer' # required
 });
+
+fields.mount('cardContainer'); # required
 ```
 
 ## Generating Token
@@ -99,11 +100,27 @@ By default card security code is required. If you'd like to disable it's validat
 ```js
 var fields = new TrattaFields({
   api_key: '<public_api_key>', # required
-  el: 'cardContainer' # required
 
   cvv_required: false,
 });
+
+fields.mount('cardContainer'); # required
 ```
+
+## Mounting and unmounting fields
+
+Tratta fields provide `mount` and `unmount` methods to programatically insert or remove payment fields from document.
+
+```js
+var fields = new TrattaFields({
+  api_key: '<public_api_key>',
+});
+
+fields.mount('cardContainer');
+fields.unmount();
+```
+
+This can be useful, when you use Tratta fields in modal. When closing modal, payment fields html is usually removed from the document alongside the modal component. When you re-open the modal, you just need to call `mount` and fields will be inserted into the document again.
 
 ## Example Code
 
