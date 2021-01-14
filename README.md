@@ -109,7 +109,7 @@ fields.mount('cardContainer'); # required
 
 ## Mounting and unmounting fields
 
-Tratta fields provide `mount` and `unmount` methods to programatically insert or remove payment fields from document.
+Tratta Fields provide `mount` and `unmount` methods to programatically insert or remove payment fields from document.
 
 ```js
 var fields = new TrattaFields({
@@ -120,7 +120,7 @@ fields.mount('cardContainer');
 fields.unmount();
 ```
 
-This can be useful, when you use Tratta fields in modal. When closing modal, payment fields html is usually removed from the document alongside the modal component. When you re-open the modal, you just need to call `mount` and fields will be inserted into the document again.
+This can be useful, when you use Tratta Fields in modal. When closing modal, payment fields html is usually removed from the document alongside the modal component. When you re-open the modal, you just need to call `mount` and fields will be inserted into the document again.
 
 ## Example Code
 
