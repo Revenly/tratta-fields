@@ -20,9 +20,9 @@
   <script>
     var fields = new TrattaFields({
       api_key: '<public_api_key>',
-
-      el: 'cardContainer',
     });
+
+    fields.mount('cardContainer');
 
     fields.on('blur', function (event) {
       if (event.error) {

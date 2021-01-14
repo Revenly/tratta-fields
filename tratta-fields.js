@@ -13,6 +13,7 @@
 
   var injectScript = function (url, callback) {
     if (document.getElementById('usaepay_script')) {
+      callback();
       return;
     }
 
@@ -132,44 +133,34 @@
     }
   },
 
+  errorListenerRegistered = false,
+
   /**
    * Tratta Fields Constructor
    */
   TrattaFields = function (options) {
-    var self = this,
+    if (options.api_key === null) {
+      throw 'API key is not specified.'
+    } else if (options.id === null) {
+      throw 'Element ID is not specified.'
+    }
 
-    options = self.config(options),
-
-    init = function () {
-      if (options.api_key === null) {
-        throw 'API key is not specified.'
-      } else if (options.id === null) {
-        throw 'Element ID is not specified.'
-      }
-
-      self.client = new usaepay.Client(options.api_key);
-      self.paymentCard = self.client.createPaymentCardEntry();
-
-      self.paymentCard.generateHTML(options.style, { cvv_required: options.cvv_required });
-      self.paymentCard.addHTML(options.el);
-
-      self.paymentCard.addEventListener('error', function (errorMessage) {
-        self.blurCallback(formatError(errorMessage));
-      });
-    };
-
-    injectScript(options.processor_url, init);
+    this.options = this.config(options);
   };
 
   /**
    * public Tratta Fields API
    */
   TrattaFields.prototype = {
+    options: {},
+
     blurCallback: function () {},
 
     client: null,
 
     paymentCard: null,
+
+    elementId: null,
 
     /**
      * configure functionality
@@ -179,6 +170,45 @@
       options.style = addIdStyles(options.style);
 
       return options;
+    },
+
+    mount: function (elementId) {
+      var self = this;
+      self.elementId = elementId,
+
+      init = function () {
+        if (self.client === null) {
+          self.client = new usaepay.Client(self.options.api_key);
+        }
+
+        if (self.paymentCard === null) {
+          self.paymentCard = self.client.createPaymentCardEntry();
+        }
+
+        self.paymentCard.generateHTML(self.options.style, { cvv_required: self.options.cvv_required });
+        self.paymentCard.addHTML(elementId);
+
+        if (!errorListenerRegistered) {
+          self.paymentCard.addEventListener('error', function (errorMessage) {
+            self.blurCallback(formatError(errorMessage));
+          });
+          errorListenerRegistered = true;
+        }
+      };
+
+      injectScript(this.options.processor_url, init);
+    },
+
+    unmount: function () {
+      if (this.elementId === null) {
+        throw 'Cannot unmount Tratta Fields. Element id is not specified.'
+      }
+
+      var container = document.getElementById(this.elementId);
+
+      if (container) {
+        container.innerHTML = '';
+      }
     },
 
     on: function (eventType, callback) {
