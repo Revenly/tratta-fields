@@ -61,6 +61,8 @@ Here is the list of Error Types you can expect to find in `catch` method or `blu
  - EXPIRATION_DATE_IS_REQUIRED
  - CARD_IS_EXPIRED
  - CVV_IS_REQUIRED
+ - VALID_AUTHENTICATION_REQUIRED
+ - SOURCE_KEY_NOT_FOUND
 
 ## Styling Fields
 
@@ -93,6 +95,20 @@ var fields = new TrattaFields({
 });
 ```
 
+## Environments
+
+You can toggle between `production` and `sandbox` environments using `sandbox` parameters. By default Tratta Fields work in `production` mode.
+
+```js
+var fields = new TrattaFields({
+  api_key: '<public_api_key>', # required
+
+  sandbox: true,
+});
+
+fields.mount('cardContainer'); # required
+```
+
 ## Card Security Code (CVV)
 
 By default card security code is required. If you'd like to disable it's validation, you can do it with cvv_required parameter:
@@ -105,6 +121,33 @@ var fields = new TrattaFields({
 });
 
 fields.mount('cardContainer'); # required
+```
+
+## Extended response
+
+When tokenizing card data, by default you'll only get a `payment_key` token string in response. If you'd like to get extended response with card type and bin information, you can set use `extended_response` parameter to `true`.
+
+```js
+var fields = new TrattaFields({
+  api_key: '<public_api_key>', # required
+
+  extended_response: true,
+});
+
+fields.mount('cardContainer'); # required
+```
+
+Response from `createToken` will then be
+
+```json
+{
+  "type":"payment_key",
+  "key":"payment-key-token",
+  "creditcard":{
+    "number":"424242xxxxxx4242",
+    "cardtype":"Visa"
+    }
+  }
 ```
 
 ## Mounting and unmounting fields

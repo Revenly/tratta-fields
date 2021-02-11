@@ -90,7 +90,11 @@
    * defaults
    */
   defaults = {
-    processor_url: 'https://www.usaepay.com/js/v1/pay.js',
+    sandbox: false,
+
+    production_processor_url: 'https://www.usaepay.com/js/v1/pay.js',
+
+    sandbox_processor_url: 'https://sandbox.usaepay.com/js/v1/pay.js',
 
     api_key: null,
 
@@ -99,6 +103,8 @@
     style: {},
 
     cvv_required: true,
+
+    extended_response: false,
   },
 
   errors = {
@@ -108,7 +114,9 @@
     CARD_NUMBER_IS_REQUIRED: 'CARD_NUMBER_IS_REQUIRED',
     EXPIRATION_DATE_IS_REQUIRED: 'EXPIRATION_DATE_IS_REQUIRED',
     CARD_IS_EXPIRED: 'CARD_IS_EXPIRED',
-    CVV_IS_REQUIRED: 'CVV_IS_REQUIRED'
+    CVV_IS_REQUIRED: 'CVV_IS_REQUIRED',
+    VALID_AUTHENTICATION_REQUIRED: 'VALID_AUTHENTICATION_REQUIRED',
+    SOURCE_KEY_NOT_FOUND: 'SOURCE_KEY_NOT_FOUND'
   },
 
   formatError = function (errorMessage) {
@@ -125,7 +133,9 @@
       'Invalid card informtion': errors.INVALID_CARD_INFORMATION,
       'expiration date is required': errors.EXPIRATION_DATE_IS_REQUIRED,
       'card is expired': errors.CARD_IS_EXPIRED,
-      'cvv is required': errors.CVV_IS_REQUIRED
+      'cvv is required': errors.CVV_IS_REQUIRED,
+      'Valid authentication required': errors.VALID_AUTHENTICATION_REQUIRED,
+      'Specified source key not found.': errors.SOURCE_KEY_NOT_FOUND,
     };
 
     var errorType = Object.prototype.hasOwnProperty.call(formatMap, errorMessage)
@@ -191,7 +201,11 @@
           self.paymentCard = self.client.createPaymentCardEntry();
         }
 
-        self.paymentCard.generateHTML(self.options.style, { cvv_required: self.options.cvv_required });
+        self.paymentCard.generateHTML(self.options.style, {
+          cvv_required: self.options.cvv_required,
+          extended_response: self.options.extended_response,
+        });
+
         self.paymentCard.addHTML(elementId);
 
         if (!errorListenerRegistered) {
@@ -202,7 +216,9 @@
         }
       };
 
-      injectScript(this.options.processor_url, init);
+      var processor_url = this.options.sandbox ? this.options.sandbox_processor_url : this.options.production_processor_url;
+
+      injectScript(processor_url, init);
     },
 
     unmount: function () {
