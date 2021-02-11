@@ -125,7 +125,7 @@ fields.mount('cardContainer'); # required
 
 ## Extended response
 
-When tokenizing card data, by default you'll only get a `payment_key` token string in response. If you'd like to get extended response with card type and bin information, you can set use `extended_response` parameter to `true`.
+When tokenizing card data, by default you'll only get a `payment_key` token string in response. If you'd like to get extended response with card type and bin information, you can set `extended_response` parameter to `true`.
 
 ```js
 var fields = new TrattaFields({
