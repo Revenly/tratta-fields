@@ -97,7 +97,7 @@ var fields = new TrattaFields({
 
 ## Environments
 
-You can toggle between `production` and `sandbox` environments using `sandbox` parameters. By default Tratta Fields work in `production` mode.
+You can toggle between `production` and `sandbox` environments using `sandbox` parameter. By default Tratta Fields works in `production` mode.
 
 ```js
 var fields = new TrattaFields({
@@ -125,7 +125,7 @@ fields.mount('cardContainer'); # required
 
 ## Extended response
 
-When tokenizing card data, by default you'll only get a `payment_key` token string in response. If you'd like to get extended response with card type and bin information, you can set `extended_response` parameter to `true`.
+When tokenizing card data by default you'll only get a `payment_key` token string in response. If you'd like to get extended response with card type and bin information you can set `extended_response` parameter to `true`.
 
 ```js
 var fields = new TrattaFields({
@@ -139,13 +139,13 @@ fields.mount('cardContainer'); # required
 
 Response from `createToken` will then be
 
-```json
+```js
 {
-  "type":"payment_key",
-  "key":"payment-key-token",
-  "creditcard":{
-    "number":"424242xxxxxx4242",
-    "cardtype":"Visa"
+  "type": "payment_key",
+  "key": "payment-key-token",
+  "creditcard": {
+    "number": "424242xxxxxx4242",
+    "cardtype": "Visa"
     }
   }
 ```
