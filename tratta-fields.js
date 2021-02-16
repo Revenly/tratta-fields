@@ -240,12 +240,18 @@
     },
 
     createToken: function () {
+      var self = this;
+
       return this.client
         .getPaymentKey(this.paymentCard)
         .then(function (result) {
           if (result.error) {
             //
           } else {
+            if (self.options.extended_response) {
+              return JSON.parse(result);
+            }
+
             return result;
           }
         })

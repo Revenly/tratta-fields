@@ -1,6 +1,6 @@
 {
   "name": "tratta-fields",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Tratta Payment Fields",
   "main": "tratta-fields.js",
   "repository": "https://github.com/Revenly/tratta-fields.git",
